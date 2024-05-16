@@ -78,10 +78,10 @@ func (tc *TypedConnection[T]) ConnectionType() ConnectionType {
 // T's Convertable interface. If successful, the function will populate the given data
 // pointer with the read data. On failure, it will return an error.
 //
-// Read takes a variadic parameter of type ReadOptions, which can be used to set the chunk
+// This takes a variadic parameter of type ReadOptions, which can be used to set the chunk
 // size and buffer size to be used. If no ReadOptions are supplied, then the defaults are
-// used using the private defaultReadFromOptions function. If more than ReadOptions are
-// supplied then only the first will be used.
+// used using the private defaultReadFromOptions function. If more than one ReadOptions
+// are supplied then only the first will be used.
 func (tc *TypedConnection[T]) Read(data *T, opts ...ReadOptions) (int, error) {
 	if data == nil {
 		return 0, errors.New("data pointer was nil")

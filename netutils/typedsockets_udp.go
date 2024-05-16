@@ -41,10 +41,10 @@ func (utc *UDPTypedConnection[T]) WriteTo(data T, addr net.Addr) (int, error) {
 // with the read data from the connection. On failure, the amount of bytes read is still
 // returned but so is an error. The data parameter is left untouched.
 //
-// Read takes a variadic parameter of type ReadOptions, which can be used to set the chunk
+// This takes a variadic parameter of type ReadOptions, which can be used to set the chunk
 // size and buffer size to be used. If no ReadOptions are supplied, then the defaults are
-// used using the private defaultReadFromOptions function. If more than ReadOptions are
-// supplied then only the first will be used.
+// used using the private defaultReadFromOptions function. If more than one ReadOptions
+// are supplied then only the first will be used.
 func (utc *UDPTypedConnection[T]) ReadFrom(data *T, opts ...ReadOptions) (int, net.Addr, error) {
 	var readOpts ReadOptions
 	if opts == nil {
