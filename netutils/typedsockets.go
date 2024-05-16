@@ -23,15 +23,15 @@ type Convertable interface {
 	Unmarshal(v any, data []byte) error
 }
 
-// ReadFromOptions is a struct used for all Read and ReadFrom implementations to define
+// ReadOptions is a struct used for all Read and ReadFrom implementations to define
 // certain optional parameters.
-type ReadFromOptions struct {
+type ReadOptions struct {
 	BufferSize int
 	ChunkSize  int
 }
 
-func defaultReadFromOptions() ReadFromOptions {
-	return ReadFromOptions{
+func defaultReadOptions() ReadOptions {
+	return ReadOptions{
 		BufferSize: 4096,
 		ChunkSize:  256,
 	}
@@ -77,14 +77,19 @@ func (tc *TypedConnection[T]) ConnectionType() ConnectionType {
 // Reads from the connection, attempting to read a T from the buffer by converting using
 // T's Convertable interface. If successful, the function will populate the given data
 // pointer with the read data. On failure, it will return an error.
-func (tc *TypedConnection[T]) Read(data *T, opts ...ReadFromOptions) (int, error) {
+//
+// Read takes a variadic parameter of type ReadOptions, which can be used to set the chunk
+// size and buffer size to be used. If no ReadOptions are supplied, then the defaults are
+// used using the private defaultReadFromOptions function. If more than ReadOptions are
+// supplied then only the first will be used.
+func (tc *TypedConnection[T]) Read(data *T, opts ...ReadOptions) (int, error) {
 	if data == nil {
 		return 0, errors.New("data pointer was nil")
 	}
 
-	var readOpts ReadFromOptions
+	var readOpts ReadOptions
 	if opts == nil {
-		readOpts = defaultReadFromOptions()
+		readOpts = defaultReadOptions()
 	} else {
 		readOpts = opts[0]
 	}

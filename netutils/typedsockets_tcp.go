@@ -23,10 +23,15 @@ func NewTCPTypedConnection[T Convertable](conn net.Conn) TCPTypedConnection[T] {
 // On success the amount of bytes read is returned and the data parameter is populated
 // with the read data from the connection. On failure, the amount of bytes read is still
 // returned alongside an error. The data pointer is left untouched.
-func (ttc *TCPTypedConnection[T]) ReadFrom(data *T, opts ...ReadFromOptions) (int64, error) {
-	var readOpts ReadFromOptions
+//
+// Read takes a variadic parameter of type ReadOptions, which can be used to set the chunk
+// size and buffer size to be used. If no ReadOptions are supplied, then the defaults are
+// used using the private defaultReadFromOptions function. If more than ReadOptions are
+// supplied then only the first will be used.
+func (ttc *TCPTypedConnection[T]) ReadFrom(data *T, opts ...ReadOptions) (int64, error) {
+	var readOpts ReadOptions
 	if opts == nil {
-		readOpts = defaultReadFromOptions()
+		readOpts = defaultReadOptions()
 	} else {
 		readOpts = opts[0]
 	}
